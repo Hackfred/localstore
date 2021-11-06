@@ -63,8 +63,8 @@ class Utils implements UtilsImpl {
   }
 
   @override
-  Future<dynamic>? set(Map<String, dynamic> data, String path) {
-    _writeFile(data, path);
+  Future<dynamic>? set(Map<String, dynamic> data, String path, {Object? toEncodable(Object? nonEncodable)?}) {
+    _writeFile(data, path, toEncodable: toEncodable);
   }
 
   @override
@@ -178,8 +178,8 @@ class Utils implements UtilsImpl {
     }
   }
 
-  Future _writeFile(Map<String, dynamic> data, String path) async {
-    final serialized = json.encode(data);
+  Future _writeFile(Map<String, dynamic> data, String path, {Object? toEncodable(Object? nonEncodable)?}) async {
+    final serialized = json.encode(data, toEncodable: toEncodable);
     final buffer = utf8.encode(serialized);
     final file = await _getFile(path);
     final _file = file!.openSync(mode: FileMode.append);

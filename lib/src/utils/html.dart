@@ -66,8 +66,8 @@ class Utils implements UtilsImpl {
   }
 
   @override
-  Future<dynamic>? set(Map<String, dynamic> data, String path) {
-    _writeToStorage(data, path);
+  Future<dynamic>? set(Map<String, dynamic> data, String path, {Object? toEncodable(Object? nonEncodable)?}) {
+    _writeToStorage(data, path, toEncodable: toEncodable);
   }
 
   @override
@@ -140,6 +140,7 @@ class Utils implements UtilsImpl {
   Future<dynamic> _writeToStorage(
     Map<String, dynamic> data,
     String path,
+  {Object? toEncodable(Object? nonEncodable)?}
   ) async {
     final key = path.replaceAll(RegExp(r'[^\/]+\/?$'), '');
 
@@ -153,7 +154,7 @@ class Utils implements UtilsImpl {
       if (dataCol.key != '') {
         final mapCol = json.decode(dataCol.value) as Map<String, dynamic>;
         mapCol[id] = data;
-        dataCol = MapEntry(id, json.encode(mapCol));
+        dataCol = MapEntry(id, json.encode(mapCol, toEncodable: toEncodable));
         localStorage.update(
           key,
           (value) => dataCol.value,
@@ -162,8 +163,8 @@ class Utils implements UtilsImpl {
       } else {
         localStorage.update(
           key,
-          (value) => json.encode({id: data}),
-          ifAbsent: () => json.encode({id: data}),
+          (value) => json.encode({id: data, toEncodable: toEncodable}),
+          ifAbsent: () => json.encode({id: data, toEncodable: toEncodable}),
         );
       }
       // ignore: close_sinks

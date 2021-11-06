@@ -10,7 +10,7 @@ abstract class DocumentRefImpl {
   ///
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
-  Future<dynamic> set(Map<String, dynamic> data, [SetOptions? options]);
+  Future<dynamic> set(Map<String, dynamic> data, {Object? toEncodable(Object? nonEncodable)?, SetOptions? options});
 
   /// Reads the document referenced by this [DocumentRef].
   Future<Map<String, dynamic>?> get();

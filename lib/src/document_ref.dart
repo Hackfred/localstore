@@ -32,7 +32,7 @@ class DocumentRef implements DocumentRefImpl {
   final Map<String, dynamic> _data = {};
 
   @override
-  Future<dynamic> set(Map<String, dynamic> data, [SetOptions? options]) async {
+  Future<dynamic> set(Map<String, dynamic> data, {Object? toEncodable(Object? nonEncodable)?, SetOptions? options}) async {
     options ??= SetOptions();
     if (options.merge) {
       final output = Map<String, dynamic>.from(data);
@@ -41,10 +41,10 @@ class DocumentRef implements DocumentRefImpl {
         input![key] = value;
       });
       _data[id] = input;
-      _utils.set(data, path);
+      _utils.set(data, path, toEncodable: toEncodable);
     } else {
       _data[id] = data;
-      _utils.set(data, path);
+      _utils.set(data, path, toEncodable: toEncodable);
     }
   }
 
